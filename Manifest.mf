@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: rath.tools.ftp.ServerMain
+Created-By: Jang-Ho Hwang, rath@xrath.com
+

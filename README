@@ -1,0 +1,26 @@
+=============
+A simple ftpd
+=============
+
+* Requirement 
+Java 5 or higher.
+
+
+* Quick start
+$ ant 
+$ java -jar rath-ftpd.jar 
+
+Done! 
+
+
+* Addng a new user 
+1) Open ftpd.properties
+2) If username you want to add is 'git' and desired password is 'hub', 
+   add 2 lines like below
+
+   ftp.home.git=/home/git
+   ftp.user.git=hub
+
+3) Save the file and exit. 
+4) Restart the server. 
+

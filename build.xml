@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="FTP Server Daemon" default="build">
+
+	<property name="src" value="src"/>
+	<property name="build" value="build"/>
+	<property name="MainJar" value="rath-ftpd.jar"/>
+
+	<target name="compile">
+		<mkdir dir="${build}"/>
+		<javac srcdir="${src}"
+			destdir="${build}"
+			debug="yes">
+		</javac>
+	</target>
+
+	<target name="build" depends="compile">
+		<jar jarfile="${MainJar}"
+			basedir="${build}"
+			manifest="Manifest.mf"
+			compress="yes">
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}"/>
+		<delete file="${MainJar}"/>
+	</target>
+
+</project>
+
+
