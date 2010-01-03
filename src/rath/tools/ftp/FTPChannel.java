@@ -2,7 +2,7 @@ package rath.tools.ftp;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.text.SimpleDateFormat;
@@ -151,6 +151,11 @@ public class FTPChannel implements Runnable, DataConnectionListener
 		if( cmd.equals("SYST") )
 		{
 			processSystem();
+		}
+		else
+		if( cmd.equals("EPRT") && checkAuth() ) 
+		{
+			processPortExtensionCommand(param);
 		}
 		else
 		if( cmd.equals("PORT") && checkAuth() )
@@ -337,6 +342,44 @@ public class FTPChannel implements Runnable, DataConnectionListener
 		{
 			println( "501 Syntax error in parameters or arguments." );
 		}
+	}
+
+	protected void processPortExtensionCommand( String param ) throws Exception 
+	{
+		String[] params = param.split("\\|");
+		if( data!=null ) 
+		{
+			data.stop();
+			data = null;
+		}
+
+		this.restart = 0L;
+		InetAddress addr = null;
+		int port = 0;
+
+		if( params[1].equals("1") ) // IPv4
+			addr = InetAddress.getAllByName(params[2])[0];
+		if( params[1].equals("2") ) // IPv6
+			addr = InetAddress.getAllByName(params[2])[0];
+		port = Integer.parseInt(params[3]);
+
+		InetSocketAddress sock = null;
+		try 
+		{
+			sock = new InetSocketAddress(addr, port);
+			println( "200 EPRT command successful." );
+
+			this.data = DataConnection.createActive(sock);
+			this.data.setFileOffset(restart);
+			this.data.addDataConnectionListener(this);
+			this.data.start();
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+			println( "500 Invalid port format." );
+		}
+
 	}
 
 	protected void processPortCommand( String param ) throws Exception
