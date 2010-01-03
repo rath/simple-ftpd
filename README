@@ -13,7 +13,7 @@ $ java -jar rath-ftpd.jar
 Done! 
 
 
-* Addng a new user 
+* Adding a new user 
 1) Open ftpd.properties
 2) If username you want to add is 'git' and desired password is 'hub', 
    add 2 lines like below
