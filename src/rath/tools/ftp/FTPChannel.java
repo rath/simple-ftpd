@@ -193,6 +193,11 @@ public class FTPChannel implements Runnable, DataConnectionListener
 			processList();
 		}
 		else
+		if( cmd.equals("NLST") && checkAuth() ) 
+		{
+			processNameList();
+		}
+		else
 		if( cmd.equals("RETR") && checkAuth() )
 		{
 			processRetrieve(param);
@@ -474,6 +479,25 @@ public class FTPChannel implements Runnable, DataConnectionListener
 
 		this.userCurrent = new File(willChange);
 		println( "250 CWD command successful" );
+	}
+
+	protected void processNameList() throws Exception 
+	{
+		File[] files = userCurrent.listFiles();
+		StringBuilder sb = new StringBuilder();
+		for(File f : files) 
+			sb.append(f.getName()).append("\r\n");
+
+		if( data!=null )
+		{
+			println( "150 Opening ASCII mode data connection for file list" );
+			data.send(sb.toString(), isUTF8Enable);
+		}
+		else
+		{
+			println( "552 Requested file list action aborted." );
+		}
+
 	}
 
 	protected void processList() throws Exception
